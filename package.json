@@ -4,17 +4,28 @@
   "description": "An API rest using express.js",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gcampos2141/express-workshop.git"
+  },
   "keywords": [
-    "API",
-    "Rest",
+    "node",
     "express",
-    "node.js"
+    "jwt",
+    "mysql"
   ],
   "author": "Gabriel Campos",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gcampos2141/express-workshop/issues"
+  },
+  "homepage": "https://github.com/gcampos2141/express-workshop#readme",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
   }
 }
