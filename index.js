@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.status(200);
-  res.send("Bienvenido a la pokédex");
+  res.send("Bienvenido a la pokédex, ¿Cuál es tu pokemón?");
 });
 
 app.post("/pokemon", (req, res) => {
