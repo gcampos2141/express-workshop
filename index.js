@@ -2,12 +2,21 @@ const express = require("express");
 const app = express();
 const { pokemon } = require('./pokedex.json');
 
+// Middleware(funciones que se ejecutan antes de llegar a las rutas) para parsear el body de las solicitudes 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
 app.get("/", (req, res) => {
   res.status(200);
   res.send("Bienvenido a la pokédex");
 });
 
-app.get("/pokemon/all", (req, res) => {
+app.post("/pokemon", (req, res) => {
+  res.status(200).send(req.body);
+});
+
+app.get("/pokemon", (req, res) => {
   res.status(200);
   res.send(pokemon);
 })
@@ -26,23 +35,23 @@ app.get('/pokemon/:param', (req, res) => {
     }
   }
 
-  // Caso 2: busqueda por nombre
-  const name = param.toLowerCase();
-  const poke = pokemon.find(p => p.name.toLowerCase() === name);
-  if (poke) {
-    return res.status(200).send(poke);
+  // Caso 2: busqueda por nombre solo con letras del alfabeto
+  if (!/^[a-zA-Z]+$/.test(param)) { 
+    return res.status(400).send("El parámetro debe ser un número o un nombre válido");
   }
-
-  return res.status(404).send("El pokemon no existe");
+  const name = param.toUpperCase();
+  // Se realizo un cambio, se cambio find por filter para que retorne todos los pokemones que coincidan con el nombre
+  // la diferencia entre find y filter es que "find" retorna el primer elemento que cumple la condición y "filter" retorna 
+  // un array con todos los elementos que cumplen la condición, incluso si no hay ninguno, en ese caso retornará un array 
+  // vacío (VIDEO NODE.JS 03)
+  const poke = pokemon.filter(p => p.name.toUpperCase() === name.toUpperCase()); 
+  (poke.length > 0) ? res.status(200).send(poke) : res.status(404).send("El pokemon no existe");
 });
 
 app.listen(process.env.PORT || 3000, () => {
   console.log("Server is running on port 3000");
 });
 
-// process.env.PORT -> variable de entorno, 
-// sirve para cuando subimos la app a un servidor 
-// ya que el servidor nos asigna un puerto dinamicamente
 app.listen(process.env.PORT || 3000,  () => {
   console.log("Server is running on port 3000");
 });
