@@ -2,12 +2,27 @@ const express = require("express");
 const pokemonRouter = express.Router();
 const sql = require('../config/database');
 
-pokemonRouter.post("/", (req, res) => {
-  res.status(200).json(req.body);
+pokemonRouter.post("/", async (req, res) => {  
+  const {pok_name, pok_height, pok_weight, pok_base_experience} = req.body;
+  if(!pok_name || !pok_height || !pok_weight || !pok_base_experience) {
+      return res.status(400).json({code: 400, message:"Faltan datos obligatorios para crear un Pokemón"});
+  }else{
+      let query = `INSERT INTO pokemon(pok_name, pok_height, pok_weight, pok_base_experience)`;
+      query += ` VALUES ("${pok_name}", ${pok_height}, ${pok_weight}, ${pok_base_experience})`;
+
+      const rows = await sql.query(query);
+      
+      if(rows.affectedRows == 1){
+          res.status(201).json({code: 201, message:"Pokémon creado exitosamente"});
+
+      }else { res.status(500).json({code: 500, message:"Ocurrio un error al crear un Pokemón nuevo"}); }
+  }
+
 });
 
 pokemonRouter.get("/", async (req, res) => {
-  res.status(200).json({ code: 1, messsage: pkm });
+  const [pkm] = await sql.query("SELECT * FROM POKEMON");
+  res.status(200).json({ code: 200, message: pkm });
 })
 
 pokemonRouter.get('/:param', async (req, res) => {
