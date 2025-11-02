@@ -1,4 +1,5 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const userRouter = express.Router();
 const sql = require('../config/database');
 
@@ -20,6 +21,35 @@ userRouter.post("/", async (req, res) => {
             res.status(500).json({code: 500, message:"Ocurrio un error al crear un usuario"});
         }
     } catch (error) {
+        res.status(500).json({code: 500, message:"Error del servidor"});
+    }
+});
+
+userRouter.post("/login", async (req, res) => {
+    try{
+        const {user_mail, user_password} = req.body;
+
+        if(!user_mail || !user_password) {
+            return res.status(400).json({ code: 400, message: "Faltan datos para iniciar sesión" });
+        }
+
+        const query = "SELECT * FROM USER WHERE user_mail = ? AND user_password = ?";        
+        const rows = await sql.query(query, [user_mail, user_password]);
+
+        if (rows.length == 1){
+            // Generar un token JWT al momento de iniciar sesión
+            const token = jwt.sign({
+                user_id: rows[0].user_id,
+                user_mail: rows[0].user_mail,
+            }, "debugkey");
+
+            res.status(200).json({code: 200, message: token});
+        }else {
+            res.status(401).json({code: 401, message:"Credenciales inválidas"});
+        }
+    }
+    catch (error) {
+        console.error(error);
         res.status(500).json({code: 500, message:"Error del servidor"});
     }
 });
