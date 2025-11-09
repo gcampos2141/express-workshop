@@ -92,7 +92,7 @@ pokemonRouter.patch('/:param', async (req, res) => {
 });
 
 pokemonRouter.get("/", async (req, res) => {
-  const [pkm] = await sql.query("SELECT * FROM POKEMON");
+  const pkm = await sql.query("SELECT * FROM POKEMON");
   res.status(200).json({ code: 200, message: pkm });
 })
 
