@@ -11,9 +11,13 @@ const user = require('./routes/user');
 const auth = require('./middleware/auth');
 const notFound = require('./middleware/notFound');
 const index = require ("./middleware/index");
+const cors = require("./middleware/cors");
+
+// Middleware CORS para permitir solicitudes desde el front
+app.use(cors);
 
 // Middleware de registro de solicitudes HTTP
-app.use(morgan('dev'))
+app.use(morgan('dev'));
 
 // Middleware para parsear el cuerpo de las solicitudes
 app.use(express.json());
