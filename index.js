@@ -29,9 +29,6 @@ app.use("/user", user.userRouter);
 // Protección de rutas con el middleware de autenticación JWT
 app.use(auth);
 
-// Ruta de bienvenida
-app.use(index);
-
 // Rutas protegidas para pokemones
 app.use("/pokemon", pokemon.pokemonRouter);
 
