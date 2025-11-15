@@ -23,14 +23,14 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Ruta de bienvenida
-app.use(index);
-
 // Rutas públicas para usuario (registro e inicio de sesión)
 app.use("/user", user.userRouter);
 
 // Protección de rutas con el middleware de autenticación JWT
 app.use(auth);
+
+// Ruta de bienvenida
+app.use(index);
 
 // Rutas protegidas para pokemones
 app.use("/pokemon", pokemon.pokemonRouter);

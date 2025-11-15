@@ -10,7 +10,7 @@ userRouter.post("/signin", async (req, res) => {
             return res.status(400).json({ code: 400, message: "Faltan datos obligatorios para crear un usuario" });
         }
 
-        let query = `INSERT INTO user(user_name, user_mail, user_password)`;
+        let query = `INSERT INTO usuarios_pokedex(user_name, user_mail, user_password)`;
         query += ` VALUES ("${user_name}", "${user_mail}", "${user_password}")`;
 
         const rows = await sql.query(query);
@@ -33,11 +33,12 @@ userRouter.post("/login", async (req, res) => {
             return res.status(400).json({ code: 400, message: "Faltan datos para iniciar sesión" });
         }
 
-        const query = "SELECT * FROM USER WHERE user_mail = ? AND user_password = ?";        
-        const rows = await sql.query(query, [user_mail, user_password]);
+        // Verificar las credenciales con la base de datos
+        const query = "SELECT * FROM usuarios_pokedex WHERE user_mail = ? AND user_password = ?";   
+        const rows = await sql.query(query, [user_mail, user_password]); 
 
+        // Si las credenciales son válidas, entonces se genera un token JWT
         if (rows.length == 1){
-            // Generar un token JWT al momento de iniciar sesión
             const token = jwt.sign({
                 user_id: rows[0].user_id,
                 user_mail: rows[0].user_mail,
